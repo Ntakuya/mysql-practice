@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  rust_container_image:
+    container_name: rust_container_image
+    build:
+     context: ./api
+     dockerfile: rust.dockerfile
+    tty: true
+    restart: always
+    volumes:
+      - "./api:/usr/src/myapp"
+    networks:
+      - local
+      
+  mysql_container_image:
+    container_name: mysql_container_image
+    build:
+      context: ./docker
+      dockerfile: mysql.dockerfile
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: disel_example
+    ports:
+      - "3306:3306"
+    volumes:
+      - "my_db_volume:/var/lib/mysql"
+    networks:
+      - local
+
+volumes:
+  my_db_volume: {}
+
+networks:
+  local: {}
